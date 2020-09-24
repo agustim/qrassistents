@@ -2,5 +2,5 @@
 
 export default (req, res) => {
   res.statusCode = 200
-  res.json({ env: process.env })
+  res.json({ message: "Hello World!" })
 }
