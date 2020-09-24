@@ -13,8 +13,12 @@
     "@emotion/styled": "^10.0.27",
     "emotion-theming": "^10.0.27",
     "next": "^9.5.3",
+    "qrcode.react": "^1.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-qr-reader": "^2.2.1"
+  },
+  "devDependencies": {
+    "qrcode": "^1.4.4"
   }
 }
