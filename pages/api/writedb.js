@@ -1,4 +1,6 @@
-const GithubDB = require('github-db').default;
+const { Octokit } = require("@octokit/rest");
+const personalAccessToken = process.env.GH_TOKEN
+const btoa = require("btoa-lite");
 
 const errorResponse = function(res, msg) {
     res.statusCode = 500
@@ -10,9 +12,7 @@ const responseJSONPage = function (res, code, msg) {
     res.json({ message: msg })
 }
 
-export default (req, res) => {
-
-    const personalAccessToken = process.env.GH_TOKEN
+export default async (req, respon) => {
 
     var options = {
         owner: process.env.GH_USER,
@@ -20,37 +20,34 @@ export default (req, res) => {
         path: process.env.GH_PATHFILE
     };
 
-    console.log(personalAccessToken)
-    console.log(options)
+    const octokit = new Octokit({
+        auth: "token " + personalAccessToken,
+    });
 
-    var githubDB = new GithubDB(options);
+    let res = await octokit.repos.getContent(options)
 
-    if (!githubDB.auth(personalAccessToken)) {
-        errorResponse(res,"No token")
-        return
+    var obj = Object.assign(options,{
+        message: "create test.txt " + Date.now(),
+        content: btoa("Test content " + Date.now()),
+    })
+    if (res) {
+        obj = Object.assign(obj, { sha: res.data.sha })
     }
-    githubDB.connectToRepo()
-    .then(null, (error) => {
-        errorResponse(res,error)
-        return
-    })
-    githubDB.find({hello: "world"})
+
+    console.log(obj)
+    octokit.repos.createOrUpdateFileContents(
+        obj
+    )
     .then((data) => {
         console.log(data)
+        responseJSONPage(respon, 200, data)
+        return
     }, (error) => {
-        console.log("Error:" + error)
-        errorResponse(res, error)
+        console.log("ERROR:" + error)
+        errorResponse(respon, error)
         return
     })
-    githubDB.save({"message": "wooohoo"})
-    .then((data) => {
-        console.log(data)
-    }, (error) => {
-        console.log("Error:" + error)
-        errorResponse(res, error)
-        return
-    })
-    responseJSONPage(res, 200, "OK")
 }
+
 
 
