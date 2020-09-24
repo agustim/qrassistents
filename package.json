@@ -19,6 +19,7 @@
     "react-qr-reader": "^2.2.1"
   },
   "devDependencies": {
+    "follow-redirects": "^1.13.0",
     "github": "^14.0.0",
     "github-db": "^1.1.3",
     "qrcode": "^1.4.4"
