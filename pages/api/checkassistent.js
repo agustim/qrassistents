@@ -36,7 +36,6 @@ export default async (req, respon) => {
     } catch (e) {
         return pageResp.errorResponse(respon, `Unespected parameters.`)
     }
-
     if (content && content.assitent) {
         return pageResp.responseJSONPage(respon, 401, "Assisten ja validat.")
     }

@@ -1,8 +1,14 @@
 const { Octokit } = require("@octokit/rest");
 const personalAccessToken = process.env.GH_TOKEN
 const pageResp = require('./lib/pageResp')
+const authToken = process.env.AUTHTOKEN
 
 export default async (req, respon) => {
+    if ((authToken) && (authToken != null)) {
+        if (req.body.token != authToken){
+            return pageResp.errorResponse(respon, "AuthToken is wrong")
+        }    
+    } 
     if (!req.body.code) {
         return pageResp.errorResponse(respon, "Not code parameter.")
     }
